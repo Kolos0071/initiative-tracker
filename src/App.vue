@@ -2,12 +2,18 @@
 import type {IFormState, ICharItem} from "./internal"
 import { ref, Ref, onMounted } from 'vue'
 
+let counter = 1;
 
    const formState:Ref<IFormState>= ref({
         isOpen: false,
-        name: "Боец 1",
-        initiative: 0,
-        hits: 5
+        name: "Боец " + counter,
+        initiative: 2,
+        hits: 5,
+        reset() {
+            this.name = "Боец " + counter;
+            this.initiative =  2;
+            this.hits = 5;
+        }
     })
 
     const fightersList: Ref<ICharItem[]> = ref([]);
@@ -20,26 +26,59 @@ import { ref, Ref, onMounted } from 'vue'
         const fighter: ICharItem = {
             name: formState.value.name,
             initiative:formState.value.initiative,
-            hits: formState.value.hits
+            hits: formState.value.hits,
+            tempDamage: 1,
         };
         fightersList.value.push(fighter);
+        counter ++;
         fightersList.value.sort( (a, b) => {
             return a.initiative - b.initiative;});
-        formState.value.name = "Боец 1";
-        formState.value.initiative = 0;
-        formState.value.hits = 5;
+        formState.value.reset();
     }
-    function dealDamage(index: number) {
-      fightersList.value[index].hits --;
+    function dealDamage(index: number, tempDamage: number) {
+      fightersList.value[index].hits -= tempDamage;
     }
+
+    function deleteFighters() {
+      fightersList.value = [];
+      counter = 1;
+      formState.value.reset();
+    }
+    function addRandomFighter() {
+      const fighter: ICharItem = {
+            name: formState.value.name,
+            initiative:  Math.round(Math.random() * 18 + 2),
+            hits: formState.value.hits,
+            tempDamage: 1,
+        };
+        fightersList.value.push(fighter);
+        counter ++;
+        fightersList.value.sort( (a, b) => {
+            return b.initiative - a.initiative;});
+        formState.value.reset();
+    }
+
+    onMounted(()=>{
+      document.addEventListener("keydown",(e)=>{
+        if(e.code === "KeyA") {
+          formToggler();
+        }
+
+        if(e.key === "Escape") {
+          formState.value.isOpen = false;
+        }
+
+        if(e.key === "Delete") {
+          deleteFighters();
+        }
+      })
+    })
 </script>
 
 <template>
-  <div>
-   <h1>TRACKER</h1>
-  </div>
   <main>
-    <div class="container">
+    <div class="container"
+    >
       <div
         class="form"
         :class="{'form_active': formState.isOpen}"
@@ -47,51 +86,68 @@ import { ref, Ref, onMounted } from 'vue'
         <div
           class="form__overlay"
           @click="formToggler"
+          
         />
-        <div class="form__input-wrapper">
-          <div>
-            <label for="">Name</label>
+        <div class="form__wrapper">
+          <ul class="form__input-list">
+          <li class="form__input-wrapper">
+            <label class="form__input-label" for="">Имя</label>
             <input
               v-model="formState.name"
               type="text"
             >
-          </div>
-          <div>
-            <label for="">Initiative</label>
+          </li>
+          <li class="form__input-wrapper">
+            <label class="form__input-label" for="">Инициатива</label>
             <input
               v-model="formState.initiative"
               type="number"
             >
-          </div>
-          <div>
-            <label for="">Hits</label>
+          </li>
+          <li class="form__input-wrapper">
+            <label class="form__input-label" for="">Хиты</label>
             <input
               v-model="formState.hits"
               type="number"
             >
-          </div>
-          <button @click="formToggler">
-            cancel
-          </button>
-          <button @click="addFighter">
-            add
-          </button>
+          </li>
+          
+        </ul>
+        <div class="form__button-wrapper">
+            <button @click="formToggler">
+              Отмена
+            </button>
+            <button @click="addFighter">
+              Добавить
+            </button>
         </div>
+        
+        </div>
+       
       </div>
-      <h1 class="fight__title">FIGHT</h1>
-      <button
+      <div class="fight__add-button-wrapper">
+        <button
         class="fight__add-button"
         @click="formToggler"
       >
         Добавить бойца
       </button>
+      <button
+        class="fight__add-button"
+        @click="addRandomFighter"
+      >
+        Random
+      </button>
+      </div>
+      
       <ul class="fighter-list">
         <li
           v-for="(fighter, id) in fightersList"
           :key="id"
-          class="fighter-list__item"
-          :class="{'fighter-list__item_disabled': fighter.hits <= 0}"
+          class="fighter-list__item-wrapper"
         >
+         <div class="fighter-list__item"
+          :class="{'fighter-list__item_disabled': fighter.hits <= 0}">
           <h2>{{ fighter.name }}</h2>
           <h3>{{ fighter.initiative }}</h3>
           <div v-if="fighter.hits > 0">
@@ -101,121 +157,17 @@ import { ref, Ref, onMounted } from 'vue'
               class="fighter__hits"
             />
           </div>
-          <button
-            v-if="fighter.hits > 0"
-            @click="dealDamage(id)"
-          >
-            Нанести урон
-          </button>
+          <div  v-if="fighter.hits > 0">
+            <input type="number" v-model="fighter.tempDamage">
+            <button
+              @click="dealDamage(id, fighter.tempDamage)"
+            >
+              Нанести урон
+            </button>
+          </div>
+         </div>
         </li>
       </ul>
     </div>
   </main>
 </template>
-
-<style>
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo.electron:hover {
-  filter: drop-shadow(0 0 2em #9FEAF9);
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-
-.form {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    align-items: center;
-    justify-content: center;
-}
-
-.form_active {
-    display: flex;
-}
-
-
-.fight__title {
-    margin-bottom: 24px;
-}
-
-.fight__add-button {
-    background-color: #cacaca;
-    border: 1px solid transparent;
-    margin-bottom: 24px;
-    padding: 12px;
-}
-
-.fight__add-button:hover {
-    border-color: black;
-}
-
-.fighter__hits {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-}
-
-.fighter__hits:not(:last-child) {
-    margin-right: 2px;
-}
-
-.form__overlay {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: rgba(0, 0, 0, .5);
-    z-index: -1;
-}
-
-.form__input-wrapper {
-    background-color: #fff;
-    padding: 12px;
-}
-
-.fighter-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.fighter-list__item {
-    width: 320px;
-    padding: 12px;
-    background-color: #cacaca;
-
-}
-
-.fighter-list__item:not(:last-child) {
-    margin-bottom: 12px;
-    margin-right: 12px;
-}
-
-.fighter-list__item_disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    background-image: url("./dead.png");
-    background-size: contain;
-    background-position: right;
-}
-</style>
