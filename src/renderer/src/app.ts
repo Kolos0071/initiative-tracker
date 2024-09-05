@@ -1,5 +1,5 @@
 import Form from './components/Form.vue'
-import type { IFormState, ICharItem } from './internal'
+import type { IFormState, ICharItem, IOptionsFormState } from './internal'
 import { ref, Ref, onMounted } from 'vue'
 
 export default {
@@ -9,16 +9,23 @@ export default {
 
     setup() {
 
-
         let counter: number = 1
         const roundCounter: Ref<number> = ref(1)
 
-        const optionFormState = ref({
-            isOpen: false,
+        const optionFormState:Ref<IOptionsFormState> = ref({
+            isOpen: false as boolean,
             toggler() {
                 this.isOpen = !this.isOpen
-            }
+            },
+            hpMin: 5,
+            hpMax: 5,
+            initiativeMax: 20,
+            initiativeMin: 3
         })
+
+      function saveOptions() {
+          optionFormState.value.toggler();
+      }
 
         const formState: Ref<IFormState> = ref({
             isOpen: false as boolean,
@@ -111,13 +118,6 @@ export default {
 
         onMounted(() => {
             document.addEventListener('keydown', (e) => {
-                if (e.code === 'KeyA') {
-                    formState.value.toggler()
-                }
-
-                if (e.code === 'KeyO') {
-                    optionFormState.value.toggler()
-                }
 
                 if (e.key === 'Escape') {
                     formState.value.isOpen = false

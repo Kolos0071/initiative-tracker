@@ -2,6 +2,19 @@
   <button class="option-button" @click="optionFormState.toggler">*</button>
   <Form :is-open="optionFormState.isOpen" class="option-form" @close="optionFormState.toggler()">
     <h1>OPTION FORM</h1>
+    <div>
+      <h2>Initiative range</h2>
+      <input type="number" v-model="optionFormState.initiativeMin">
+      <span>-</span>
+      <input type="number" v-model="optionFormState.initiativeMax">
+    </div>
+    <div>
+      <h2>HP range</h2>
+      <input type="number" v-model="optionFormState.hpMin">
+      <span>-</span>
+      <input type="number" v-model="optionFormState.hpMax">
+    </div>
+    <button @click="optionFormState.toggler()">Save</button>
   </Form>
   <Form class="fighter-form" :is-open="formState.isOpen" @close="formState.toggler()">
     <ul class="fighter-form__input-list">
