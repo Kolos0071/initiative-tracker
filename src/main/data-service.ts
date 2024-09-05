@@ -1,36 +1,17 @@
 import { openSync, closeSync, writeSync, readFileSync } from 'fs'
-// import * as path from 'path'
-
 import remote from 'electron'
 
 const app = remote.app
 
-
-
 export default {
   getData: async () => {
-
-    console.log("---------------");
-    console.log(app.getPath('userData'))
-    console.log("---------------");
 
     const userDataPath = app.getPath('userData');
 
     let resp
-    const json = [
-      {
-        name: 'Chuchka',
-        age: 25
-      },
-      {
-        name: 'djopA',
-        age: 13
-      },
-      {
-        name: '123421SAASD',
-        age: 12
-      }
-    ]
+    const options = {
+
+    }
     let fd
 
     try {
@@ -38,7 +19,7 @@ export default {
     } catch (error) {
       try {
         fd = openSync(userDataPath + '/options.json', 'a')
-        writeSync(fd, JSON.stringify(json))
+        writeSync(fd, JSON.stringify(options))
       } catch (err) {
         console.log(err)
       } finally {
@@ -46,8 +27,6 @@ export default {
         resp = readFileSync(userDataPath + '/options.json', 'utf8')
       }
     }
-
-   
 
     return resp
   }
