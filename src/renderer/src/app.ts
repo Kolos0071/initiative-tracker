@@ -61,7 +61,11 @@ export default {
         }
 
         function removeFighter(index: number) {
-          fightersList.value.splice(index,1);
+          if(fightersList.value.length == 1) {
+            deleteFighters()
+          } else {
+            fightersList.value.splice(index,1);
+          }
         }
 
         function addFighter() {
