@@ -29,9 +29,9 @@ body {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  padding: 0;
 }
 
 ul {
@@ -166,6 +166,59 @@ main {
   top: 10%;
   right: 10%;
 }
+.fighter-form__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.fighter-form__input-wrapper:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.fighter-form__input-label {
+  display: block;
+}
+
+.fighter-form__input {
+  height: 40px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.fighter-form__button:not(:last-child) {
+  margin-right: 16px;
+}
+
+.fighter__handler-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fighter__handler:not(:last-child) {
+  margin-bottom: 8px;
+}
+.fighter__button {
+  width: 100%;
+}
+
+.fighter__input {
+  text-align: center;
+  width: 100px;
+  height: 40px;
+  font-size: 24px;
+}
+
+.fighter__hp {
+  color: green;
+}
+
+.fighter__hp_wounded{
+  color: orange;
+}
+
 
 
 
