@@ -20,7 +20,7 @@
           <div
             class="fighter-list__item fighter"
           >
-            <button class="fighter__remove-button">X</button>
+            <button class="fighter__remove-button" @click="removeFighter">X</button>
             <h2>{{ fighter.name }}</h2>
             <h3>Инициатива: {{ fighter.initiative }}</h3>
             <div v-if="fighter.hits > 0">

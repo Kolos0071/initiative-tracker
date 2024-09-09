@@ -60,6 +60,10 @@ export default {
           optionFormState.value.initiativeMax = data.initiativeMax;
         }
 
+        function removeFighter(index: number) {
+          fightersList.value.splice(index,1);
+        }
+
         function addFighter() {
             const fighter: ICharItem = {
                 name: formState.value.name,
@@ -169,7 +173,8 @@ export default {
             counter,
             roundCounter,
           saveOptions,
-          healDamage
+          healDamage,
+          removeFighter
         }
     }
 }
