@@ -1,4 +1,8 @@
 <template>
+  <ul class="tip">
+    <li>Delete - очистить поле</li>
+    <li>Escape - закрыть форму</li>
+  </ul>
   <button class="option-button" @click="optionFormState.toggler">Options</button>
   <OptionsForm :option-form-state="optionFormState" @save="saveOptions()"/>
   <FighterForm :form-state="formState" @add="addFighter()"/>
@@ -16,6 +20,7 @@
           <div
             class="fighter-list__item fighter"
           >
+            <button class="fighter__remove-button">X</button>
             <h2>{{ fighter.name }}</h2>
             <h3>Инициатива: {{ fighter.initiative }}</h3>
             <div v-if="fighter.hits > 0">

@@ -146,7 +146,8 @@ export default {
           document.addEventListener('keydown', (e) => {
 
                 if (e.key === 'Escape') {
-                    formState.value.isOpen = false
+                    formState.value.isOpen = false;
+                    optionFormState.value.isOpen = false;
                 }
 
                 if (e.key === 'Delete') {

@@ -32,6 +32,30 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
+<style>
 
+.fighter-form__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.fighter-form__input-wrapper:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.fighter-form__input-label {
+  display: block;
+}
+
+.fighter-form__input {
+  height: 40px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.fighter-form__button:not(:last-child) {
+  margin-right: 16px;
+}
 </style>

@@ -14,24 +14,48 @@ defineProps<{
       Внимание! Любое несохраненное изменение будет сброшено после перезапуска приложения.
     </p>
     <div class="option-form__container">
-      <div>
-        <h2>Initiative range</h2>
-        <input type="number" v-model="optionFormState.initiativeMin">
+      <div class="option-form__input-wrapper">
+        <h2 class="option-form__input-title">Разброс инициативы</h2>
+        <input class="option-form__input" type="number" v-model="optionFormState.initiativeMin">
         <span>-</span>
-        <input type="number" v-model="optionFormState.initiativeMax">
+        <input class="option-form__input" type="number" v-model="optionFormState.initiativeMax">
       </div>
-      <div>
-        <h2>HP range</h2>
-        <input type="number" v-model="optionFormState.hpMin">
+      <div class="option-form__input-wrapper">
+        <h2 class="option-form__input-title">Разброс HP</h2>
+        <input class="option-form__input" type="number" v-model="optionFormState.hpMin">
         <span>-</span>
-        <input type="number" v-model="optionFormState.hpMax">
+        <input class="option-form__input" type="number" v-model="optionFormState.hpMax">
       </div>
     </div>
-    <button @click="$emit('save')">Save</button>
+
+    <div class="option-form__footer">
+      <button class="option-form__button" @click="$emit('save')">Сохранить</button>
+
+    </div>
   </CommonForm>
 </template>
 
 
 <style >
+.option-form__input-wrapper:last-child {
+}
+.option-form__footer {
+  position: sticky;
+  bottom: 0;
+  background-color: #fff;
+}
+.option-form__input-title {
+  margin-bottom: 12px;
+}
 
+.option-form__input {
+  height: 40px;
+  font-size: 20px;
+  width: 80px;
+  text-align: center;
+}
+
+.option-form__button {
+  margin-top: 20px;
+}
 </style>
