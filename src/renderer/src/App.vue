@@ -1,48 +1,8 @@
 <template>
   <button class="option-button" @click="optionFormState.toggler">Options</button>
-  <Form :is-open="optionFormState.isOpen" class="option-form" @close="optionFormState.toggler()">
-    <h1>Настройки</h1>
-    <p>
-      Внимание! Любое несохраненное изменение будет сброшено после перезапуска приложения.
-    </p>
-    <div class="option-form__container">
-      <div>
-        <h2>Initiative range</h2>
-        <input type="number" v-model="optionFormState.initiativeMin">
-        <span>-</span>
-        <input type="number" v-model="optionFormState.initiativeMax">
-      </div>
-      <div>
-        <h2>HP range</h2>
-        <input type="number" v-model="optionFormState.hpMin">
-        <span>-</span>
-        <input type="number" v-model="optionFormState.hpMax">
-      </div>
-    </div>
-    <button @click="saveOptions()">Save</button>
-  </Form>
-  <Form class="fighter-form" :is-open="formState.isOpen" @close="formState.toggler()">
-   <div class="fighter-form__wrapper">
-     <ul class="fighter-form__input-list">
-       <li class="fighter-form__input-wrapper">
-         <label class="fighter-form__input-label" for="">Имя</label>
-         <input class="fighter-form__input" v-model.trim="formState.name" type="text" />
-       </li>
-       <li class="fighter-form__input-wrapper">
-         <label class="fighter-form__input-label" for="">Инициатива</label>
-         <input class="fighter-form__input" v-model.number="formState.initiative" type="number" />
-       </li>
-       <li class="fighter-form__input-wrapper">
-         <label class="fighter-form__input-label" for="">Хиты</label>
-         <input class="fighter-form__input" v-model.number="formState.hits" type="number" />
-       </li>
-     </ul>
-     <div class="fighter-form__button-wrapper">
-       <button class="fighter-form__button" @click="formState.toggler()">Отмена</button>
-       <button class="fighter-form__button" @click="addFighter">Добавить</button>
-     </div>
-   </div>
-  </Form>
+  <OptionsForm :option-form-state="optionFormState" @save="saveOptions()"/>
+  <FighterForm :form-state="formState" @add="addFighter()"/>
+
   <h1>Раунд:{{ roundCounter }}</h1>
   <main>
     <div class="container">

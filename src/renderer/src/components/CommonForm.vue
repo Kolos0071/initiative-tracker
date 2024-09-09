@@ -8,16 +8,16 @@ export default {
 </script>
 
 <template>
-  <div class="form" :class="{ form_active: isOpen }">
-    <div class="form__overlay" @click="$emit('close')" />
-    <div class="form__wrapper">
+  <div class="common-form" :class="{ 'common-form_active': isOpen }">
+    <div class="common-form__overlay" @click="$emit('close')" />
+    <div class="common-form__wrapper">
       <slot></slot>
     </div>
   </div>
 </template>
 
 <style>
-.form {
+.common-form {
   display: none;
   position: fixed;
   top: 0;
@@ -29,11 +29,11 @@ export default {
   z-index: 1;
 }
 
-.form_active {
+.common-form_active {
   display: flex;
 }
 
-.form__overlay {
+.common-form__overlay {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -41,7 +41,7 @@ export default {
   z-index: -1;
 }
 
-.form__wrapper {
+.common-form__wrapper {
   width: 60%;
   height: 60%;
   max-width: 800px;
