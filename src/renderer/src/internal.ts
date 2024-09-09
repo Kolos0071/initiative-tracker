@@ -1,3 +1,5 @@
+import {BTOptions} from "../../main/data-service";
+
 export type CommonFormState = {
   isOpen: boolean
   toggler(): void
@@ -21,9 +23,4 @@ export type ICharItem = {
   isDead: boolean
 }
 
-export interface IOptionsFormState extends CommonFormState{
-  initiativeMax: number
-  initiativeMin: number
-  hpMax: number
-  hpMin: number
-}
+export type IOptionsFormState =  CommonFormState  & BTOptions

@@ -152,7 +152,7 @@ main {
     margin-right: 12px;
 }
 
-.fighter-list__item_disabled {
+.item_disabled {
     opacity: 0.5;
     pointer-events: none;
 }
@@ -163,9 +163,11 @@ main {
 
 .option-button {
   position: fixed;
-  bottom: 10%;
-  left: 10%;
+  top: 10%;
+  right: 10%;
 }
+
+
 
 @media (prefers-color-scheme: light) {
   :root {

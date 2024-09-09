@@ -3,7 +3,9 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
-  getData: (msg) => ipcRenderer.invoke('getData', msg)
+  getData: (msg) => ipcRenderer.invoke('getData', msg),
+  setData: (msg) => ipcRenderer.invoke('setData', msg)
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

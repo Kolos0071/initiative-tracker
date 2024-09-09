@@ -1,17 +1,46 @@
 import { openSync, closeSync, writeSync, readFileSync } from 'fs'
 import remote from 'electron'
 
-const app = remote.app
+export enum HP_APPEARANCE {
+  BOXES,
+  PERCENTAGE,
+  NONE
+}
+
+export type BTOptions = {
+  hpMin: number,
+  hpMax: number,
+  initiativeMax: number,
+  initiativeMin: number,
+  // hpAppearance: HP_APPEARANCE
+}
+
+export const DEFAULT_OPTIONS: BTOptions = {
+  hpMin: 5,
+  hpMax: 5,
+  initiativeMax: 20,
+  initiativeMin: 2,
+  // hpAppearance: HP_APPEARANCE.BOXES
+}
 
 export default {
-  getData: async () => {
 
-    const userDataPath = app.getPath('userData');
+  setData: async (options: BTOptions)=>{
+    let fd: number;
+    const userDataPath: string = remote.app.getPath('userData');
 
-    let resp
-    const options = {
-
+    try {
+      fd = openSync(userDataPath + '/options.json', 'w+')
+      writeSync(fd, JSON.stringify(options))
+    } catch (err) {
+      console.log(err)
     }
+  },
+
+  async getData(): Promise<BTOptions> {
+    const userDataPath: string = remote.app.getPath('userData');
+    let resp: string
+    const options: BTOptions = DEFAULT_OPTIONS;
     let fd
 
     try {
@@ -28,10 +57,7 @@ export default {
       }
     }
 
-    return resp
+    return JSON.parse(resp);
   }
 }
 
-export type DataService = {
-  geData(): string
-}

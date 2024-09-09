@@ -1,6 +1,7 @@
 import Form from './components/Form.vue'
 import type { IFormState, ICharItem, IOptionsFormState } from './internal'
 import { ref, Ref, onMounted } from 'vue'
+import {BTOptions} from "../../main/data-service";
 
 export default {
     components: {
@@ -8,10 +9,9 @@ export default {
     },
 
     setup() {
-
         let counter: number = 1
         const roundCounter: Ref<number> = ref(1)
-
+        const fightersList: Ref<ICharItem[]> = ref([])
         const optionFormState:Ref<IOptionsFormState> = ref({
             isOpen: false as boolean,
             toggler() {
@@ -20,34 +20,40 @@ export default {
             hpMin: 5,
             hpMax: 5,
             initiativeMax: 20,
-            initiativeMin: 3
+            initiativeMin: 2
+        })
+        const formState: Ref<IFormState> = ref({
+          isOpen: false as boolean,
+          name: 'Боец ' + counter,
+          initiative: 2,
+          hits: 5,
+          toggler() {
+            this.isOpen = !this.isOpen
+          },
+          reset() {
+            this.name = 'Боец ' + counter
+            this.initiative = 2
+            this.hits = 5
+          }
         })
 
-      function saveOptions() {
+      async function  saveOptions()  {
+          let options: BTOptions = {
+            hpMax: optionFormState.value.hpMax,
+            hpMin: optionFormState.value.hpMin,
+            initiativeMax: optionFormState.value.initiativeMax,
+            initiativeMin: optionFormState.value.initiativeMin,
+          }
+          await  window.api.setData(options);
           optionFormState.value.toggler();
       }
 
-        const formState: Ref<IFormState> = ref({
-            isOpen: false as boolean,
-            name: 'Боец ' + counter,
-            initiative: 2,
-            hits: 5,
-            toggler() {
-                this.isOpen = !this.isOpen
-            },
-            reset() {
-                this.name = 'Боец ' + counter
-                this.initiative = 2
-                this.hits = 5
-            }
-        })
-
-        const fightersList: Ref<ICharItem[]> = ref([])
-
-        const data = async () => {
+        async function getOptions() {
             const data = await window.api.getData()
-
-            console.log(data)
+          optionFormState.value.hpMin = data.hpMin;
+          optionFormState.value.hpMax = data.hpMax;
+          optionFormState.value.initiativeMin = data.initiativeMin;
+          optionFormState.value.initiativeMax = data.initiativeMax;
         }
 
         function addFighter() {
@@ -63,7 +69,7 @@ export default {
             fightersList.value.push(fighter)
             counter++
             fightersList.value.sort((a, b) => {
-                return a.initiative - b.initiative
+                return b.initiative - a.initiative
             })
             formState.value.reset()
         }
@@ -75,19 +81,34 @@ export default {
             }
         }
 
+        function healDamage(index: number, tempHealing: number) {
+          if (fightersList.value[index].hits <= 0) {
+            fightersList.value[index].hits = tempHealing
+            fightersList.value[index].isDead = false
+            fightersList.value[index].isActive = true
+          } else {
+            fightersList.value[index].hits += tempHealing
+          }
+        }
+
         function deleteFighters() {
             fightersList.value = []
             counter = 1
             roundCounter.value = 1
             formState.value.reset()
         }
-        function addRandomFighter() {
-            data()
+
+        function  getRange(min: number, max: number): number {
+          return  Math.round(Math.random() * (max - min) + min);
+        }
+
+        function addRandomFighter():void {
+          const HP = getRange(optionFormState.value.hpMin, optionFormState.value.hpMax);
             const fighter: ICharItem = {
                 name: formState.value.name,
-                initiative: Math.round(Math.random() * 18 + 2),
-                hits: formState.value.hits,
-                maxHits: formState.value.hits,
+                initiative: getRange( optionFormState.value.initiativeMin, optionFormState.value.initiativeMax) ,
+                hits: HP,
+                maxHits: HP,
                 tempDamage: 1,
                 isActive: true,
                 isDead: false
@@ -117,7 +138,8 @@ export default {
         }
 
         onMounted(() => {
-            document.addEventListener('keydown', (e) => {
+          getOptions();
+          document.addEventListener('keydown', (e) => {
 
                 if (e.key === 'Escape') {
                     formState.value.isOpen = false
@@ -140,7 +162,9 @@ export default {
             deleteFighters,
             dealDamage,
             counter,
-            roundCounter
+            roundCounter,
+          saveOptions,
+          healDamage
         }
     }
 }

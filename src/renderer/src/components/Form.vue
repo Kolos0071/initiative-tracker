@@ -44,9 +44,10 @@ export default {
 .form__wrapper {
   width: 60%;
   height: 60%;
-  max-width: 600px;
-  max-height: 400px;
+  max-width: 800px;
+  max-height: 600px;
   padding: 12px;
   background-color: #fff;
+  overflow: auto;
 }
 </style>

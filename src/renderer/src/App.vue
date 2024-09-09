@@ -1,20 +1,28 @@
 <template>
-  <button class="option-button" @click="optionFormState.toggler">*</button>
+  <button class="option-button" @click="optionFormState.toggler">Options</button>
   <Form :is-open="optionFormState.isOpen" class="option-form" @close="optionFormState.toggler()">
     <h1>OPTION FORM</h1>
-    <div>
-      <h2>Initiative range</h2>
-      <input type="number" v-model="optionFormState.initiativeMin">
-      <span>-</span>
-      <input type="number" v-model="optionFormState.initiativeMax">
+    <p>
+      Внимание! Любое несохраненное изменение опций будет сброшено после перезапуска приложения.
+    </p>
+    <div class="option-form__container">
+      <div>
+        <h2>Initiative range</h2>
+        <input type="number" v-model="optionFormState.initiativeMin">
+        <span>-</span>
+        <input type="number" v-model="optionFormState.initiativeMax">
+      </div>
+      <div>
+        <h2>HP range</h2>
+        <input type="number" v-model="optionFormState.hpMin">
+        <span>-</span>
+        <input type="number" v-model="optionFormState.hpMax">
+      </div>
+      <div>
+        <h2>HP appearance</h2>
+      </div>
     </div>
-    <div>
-      <h2>HP range</h2>
-      <input type="number" v-model="optionFormState.hpMin">
-      <span>-</span>
-      <input type="number" v-model="optionFormState.hpMax">
-    </div>
-    <button @click="optionFormState.toggler()">Save</button>
+    <button @click="saveOptions()">Save</button>
   </Form>
   <Form class="fighter-form" :is-open="formState.isOpen" @close="formState.toggler()">
     <ul class="fighter-form__input-list">
@@ -48,7 +56,6 @@
         <li v-for="(fighter, id) in fightersList" :key="id" class="fighter-list__item-wrapper">
           <div
             class="fighter-list__item"
-            :class="{ 'fighter-list__item_disabled': fighter.isDead || !fighter.isActive }"
           >
             <h2>{{ fighter.name }}</h2>
             <h3>{{ fighter.initiative }}</h3>
@@ -62,7 +69,12 @@
             <div v-if="fighter.hits > 0">
               <input v-model="fighter.tempDamage" type="number" />
               <button @click="dealDamage(id, fighter.tempDamage)">Нанести урон</button>
-              <button @click="makeMove(id)">Ход</button>
+              <button @click="healDamage(id, fighter.tempDamage)">{{fighter.hits>= fighter.maxHits?"Добавить":"Исцелить"}}</button>
+              <button :class="{ 'item_disabled': !fighter.isActive }"  @click="makeMove(id)">Ход</button>
+
+            </div>
+            <div v-else>
+              <button @click="healDamage(id, 1)">Воскресить</button>
             </div>
           </div>
         </li>

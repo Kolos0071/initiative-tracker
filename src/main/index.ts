@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import dataService from './data-service'
+import dataService, {BTOptions} from './data-service'
 
 function createWindow(): void {
   // Create the browser window.
@@ -52,6 +52,8 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.handle('getData', async () => await dataService.getData())
+  ipcMain.handle('setData', async (_, options: BTOptions) => await dataService.setData(options))
+
 
   createWindow()
 
