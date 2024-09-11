@@ -14,6 +14,10 @@
           <label class="fighter-form__input-label" for="">Хиты</label>
           <input class="fighter-form__input" v-model.number="formState.hits" type="number" />
         </li>
+        <li class="fighter-form__input-wrapper" v-if="formState.showArmor">
+          <label class="fighter-form__input-label" for="">Броня</label>
+          <input class="fighter-form__input" v-model.number="formState.armor" type="number" />
+        </li>
       </ul>
       <div class="fighter-form__button-wrapper">
         <button class="fighter-form__button" @click="formState.toggler()">Отмена</button>

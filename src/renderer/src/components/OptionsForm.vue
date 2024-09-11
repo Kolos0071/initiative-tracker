@@ -26,6 +26,20 @@ defineProps<{
         <span>-</span>
         <input class="option-form__input" type="number" v-model="optionFormState.hpMax">
       </div>
+      <div class="option-form__input-wrapper">
+        <label>Броня</label>
+        <input type="checkbox" v-model="optionFormState.showArmor">
+        <div v-if="optionFormState.showArmor">
+          <label>Учитывать броню в расчете урона?</label>
+          <input type="checkbox" v-model="optionFormState.armorCount">
+          <h2 class="option-form__input-title">Разброс брони</h2>
+          <input class="option-form__input" type="number" v-model="optionFormState.armorMin">
+          <span>-</span>
+          <input class="option-form__input" type="number" v-model="optionFormState.armorMax">
+<!--          <input class="option-form__input" type="number" v-model="optionFormState.armorCoefficient">-->
+        </div>
+
+      </div>
     </div>
 
     <div class="option-form__footer">
@@ -38,6 +52,10 @@ defineProps<{
 
 <style >
 .option-form__input-wrapper:last-child {
+}
+
+.option-form__input-wrapper:not(:last-child) {
+  margin-bottom: 8px;
 }
 .option-form__footer {
   position: sticky;

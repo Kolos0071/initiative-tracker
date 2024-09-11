@@ -85,7 +85,13 @@ main {
 }
 
 
-
+.header {
+  position: sticky;
+  top: 0;
+  padding-bottom: 18px;
+  z-index: 1;
+  background-color: #fff;
+}
 
 .fight__title {
     margin-bottom: 24px;
@@ -157,8 +163,9 @@ main {
 }
 
 .option-button {
-  position: fixed;
-  top: 10%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   right: 10%;
   z-index: 1;
 }
@@ -200,6 +207,25 @@ main {
 
 .fighter__hp_wounded{
   color: orange;
+}
+
+.fighter__armor-wrapper {
+  background-image: url("../assets/shield.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 60px;
+  font-size: 12px;
+
+}
+
+.fighter__armor-title {
+  padding-top: 6px;
+}
+
+.fighter__armor-value {
+  font-size: 24px;
+  line-height: 24px;
 }
 
 

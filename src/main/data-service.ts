@@ -12,6 +12,11 @@ export type BTOptions = {
   hpMax: number,
   initiativeMax: number,
   initiativeMin: number,
+  showArmor: boolean,
+  armorMin: number,
+  armorMax: number,
+  armorCount: boolean,
+  armorCoefficient: number
   // hpAppearance: HP_APPEARANCE
 }
 
@@ -20,6 +25,11 @@ export const DEFAULT_OPTIONS: BTOptions = {
   hpMax: 5,
   initiativeMax: 20,
   initiativeMin: 2,
+  showArmor: true,
+  armorMax: 3,
+  armorMin: 0,
+  armorCount: false,
+  armorCoefficient: 1
   // hpAppearance: HP_APPEARANCE.BOXES
 }
 
