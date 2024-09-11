@@ -1,4 +1,3 @@
-import CommonForm from './components/CommonForm.vue'
 import FighterForm from './components/FighterForm.vue'
 import OptionsForm from './components/OptionsForm.vue'
 import type { IFormState, ICharItem, IOptionsFormState } from './internal'
@@ -7,7 +6,6 @@ import {BTOptions} from "../../main/data-service";
 
 export default {
     components: {
-      CommonForm: CommonForm,
       OptionsForm: OptionsForm,
       FighterForm: FighterForm
     },
