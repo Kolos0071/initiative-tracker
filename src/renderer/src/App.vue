@@ -23,7 +23,7 @@
           <div
             class="fighter-list__item fighter"
           >
-            <button class="fighter__remove-button" @click="removeFighter">X</button>
+            <button class="fighter__remove-button" @click="removeFighter(id)">X</button>
             <h2>{{ fighter.name }}</h2>
             <h3>Инициатива: {{ fighter.initiative }}</h3>
             <div v-if="fighter.hits > 0">
@@ -40,7 +40,6 @@
                   >/<span>{{ fighter.maxHits }}</span>
                 </h3>
               </div>
-<!--              <span v-for="(_, index) in fighter.hits" :key="index" class="fighter__hits" />-->
             </div>
             <div class="fighter__handler-list" v-if="fighter.hits > 0">
               <label for="">Урон/Исцеление:</label>

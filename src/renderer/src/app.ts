@@ -78,6 +78,8 @@ export default {
         }
 
         function removeFighter(index: number) {
+          console.log(index);
+          
           if(fightersList.value.length == 1) {
             deleteFighters()
           } else {
