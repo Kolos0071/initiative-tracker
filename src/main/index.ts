@@ -4,6 +4,19 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import dataService, {BTOptions} from './data-service'
 
+let battleLogWindow: BrowserWindow | null = null
+
+// Хранилище лога боя (в памяти)
+let battleLog: Array<{
+  id: number
+  round: number
+  attackerName?: string
+  targetName?: string
+  damage: number
+  isHeal: boolean
+  timestamp: string
+}> = []
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -36,6 +49,36 @@ function createWindow(): void {
   }
 }
 
+function createBattleLogWindow(mainWindow: BrowserWindow): void {
+  if (battleLogWindow && !battleLogWindow.isDestroyed()) {
+    battleLogWindow.focus()
+    return
+  }
+
+  battleLogWindow = new BrowserWindow({
+    width: 400,
+    height: 600,
+    show: true,
+    autoHideMenuBar: true,
+    parent: mainWindow,
+    modal: false,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false
+    }
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    battleLogWindow.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/battle-log.html')
+  } else {
+    battleLogWindow.loadFile(join(__dirname, '../renderer/battle-log.html'))
+  }
+
+  battleLogWindow.on('closed', () => {
+    battleLogWindow = null
+  })
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -54,6 +97,37 @@ app.whenReady().then(() => {
   ipcMain.handle('getData', async () => await dataService.getData())
   ipcMain.handle('setData', async (_, options: BTOptions) => await dataService.setData(options))
 
+  // Battle log IPC handlers
+  ipcMain.handle('openBattleLog', async (_, mainWindowId: number) => {
+    const mainWindow = BrowserWindow.fromId(mainWindowId)
+    if (mainWindow) {
+      createBattleLogWindow(mainWindow)
+    }
+  })
+
+  ipcMain.handle('getBattleLog', () => battleLog)
+  
+  ipcMain.handle('addBattleLogEntry', async (_, entry: typeof battleLog[0]) => {
+    battleLog.unshift(entry)
+    // Уведомить окно лога об обновлении
+    if (battleLogWindow && !battleLogWindow.isDestroyed()) {
+      battleLogWindow.webContents.send('battle-log-update')
+    }
+  })
+  
+  ipcMain.handle('clearBattleLog', () => {
+    battleLog = []
+    if (battleLogWindow && !battleLogWindow.isDestroyed()) {
+      battleLogWindow.webContents.send('battle-log-update')
+    }
+  })
+  
+  ipcMain.handle('closeBattleLogWindow', () => {
+    if (battleLogWindow && !battleLogWindow.isDestroyed()) {
+      battleLogWindow.close()
+    }
+  })
+
 
   createWindow()
 
@@ -64,11 +138,9 @@ app.whenReady().then(() => {
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    battleLogWindow = null
     app.quit()
   }
 })

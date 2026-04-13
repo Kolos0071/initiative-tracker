@@ -20,6 +20,7 @@ export default {
 .common-form {
   display: none;
   position: fixed;
+
   top: 0;
   left: 0;
   bottom: 0;
@@ -47,7 +48,7 @@ export default {
   max-width: 800px;
   max-height: 600px;
   padding: 12px;
-  background-color: #fff;
+  background-color: #dadada;
   overflow: auto;
 }
 </style>

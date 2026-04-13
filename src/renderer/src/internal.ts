@@ -26,3 +26,19 @@ export type ICharItem = {
 };
 
 export type IOptionsFormState = CommonFormState & BTOptions;
+
+export type BattleLogEntry = {
+  id: number;
+  round: number;
+  attackerName?: string;
+  targetName?: string;
+  damage: number;
+  isHeal: boolean;
+  timestamp: string;
+};
+
+export type AttackState = {
+  isAttacking: boolean;
+  attackerIndex: number | null;
+  attackerName: string;
+};

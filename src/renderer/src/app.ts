@@ -1,7 +1,7 @@
 import FighterForm from './components/FighterForm.vue'
 import OptionsForm from './components/OptionsForm.vue'
-import type { IFormState, ICharItem, IOptionsFormState } from './internal'
-import { ref, Ref, onMounted } from 'vue'
+import type { IFormState, ICharItem, IOptionsFormState, BattleLogEntry, AttackState } from './internal'
+import { ref, Ref, onMounted, computed } from 'vue'
 import {BTOptions} from "../../main/data-service";
 
 export default {
@@ -14,6 +14,26 @@ export default {
         let counter: number = 1
         const roundCounter: Ref<number> = ref(1)
         const fightersList: Ref<ICharItem[]> = ref([])
+        const battleLog: Ref<BattleLogEntry[]> = ref([])
+        const attackState: Ref<AttackState> = ref({
+          isAttacking: false,
+          attackerIndex: null,
+          attackerName: ''
+        })
+        const logIdCounter: Ref<number> = ref(0)
+        
+        function addLogEntry(entry: Omit<BattleLogEntry, 'id' | 'timestamp' | 'round'>) {
+          logIdCounter.value++
+          const logEntry: BattleLogEntry = {
+            id: logIdCounter.value,
+            round: roundCounter.value,
+            ...entry,
+            timestamp: new Date().toLocaleTimeString()
+          }
+          battleLog.value.unshift(logEntry)
+          // Отправляем в main процесс для синхронизации с окном лога
+          window.api.addBattleLogEntry(logEntry)
+        }
         const optionFormState:Ref<IOptionsFormState> = ref({
           isOpen: false as boolean,
           toggler() {
@@ -117,6 +137,43 @@ export default {
                 fightersList.value[index].isDead = true
                 fightersList.value[index].isActive = false
             }
+          
+          addLogEntry({
+            targetName: fightersList.value[index].name,
+            damage: tempDamage,
+            isHeal: false
+          })
+        }
+          
+        function commitAttack(targetIndex: number) {
+          const attacker = fightersList.value[attackState.value.attackerIndex!]
+          const target = fightersList.value[targetIndex]
+          const damage = attacker.tempDamage
+          
+          if(optionFormState.value.armorCount) {
+            if((damage - target.armor) > 0) {
+              target.hits -= (damage - target.armor);
+            }
+          } else {
+            target.hits -= damage
+          }
+          
+          if (target.hits <= 0) {
+            target.isDead = true
+            target.isActive = false
+          }
+          
+          addLogEntry({
+            attackerName: attacker.name,
+            targetName: target.name,
+            damage,
+            isHeal: false
+          })
+          
+          attackState.value.isAttacking = false
+          attackState.value.attackerIndex = null
+          attackState.value.attackerName = ''
+          attacker.tempDamage = 1
         }
 
         function healDamage(index: number, tempHealing: number) {
@@ -127,6 +184,12 @@ export default {
           } else {
             fightersList.value[index].hits += tempHealing
           }
+          
+          addLogEntry({
+            targetName: fightersList.value[index].name,
+            damage: tempHealing,
+            isHeal: true
+          })
         }
 
         function deleteFighters() {
@@ -165,6 +228,38 @@ export default {
             fightersList.value[index].isActive = false
             checkRound()
         }
+
+        function startAttack(index: number) {
+          attackState.value.isAttacking = true
+          attackState.value.attackerIndex = index
+          attackState.value.attackerName = fightersList.value[index].name
+        }
+        
+        function selectTarget(index: number) {
+          if (attackState.value.isAttacking && attackState.value.attackerIndex !== null) {
+            // Запрещаем атаковать самого себя
+            if (index === attackState.value.attackerIndex) {
+              return
+            }
+            commitAttack(index)
+          }
+        }
+        
+        function cancelAttack() {
+          attackState.value.isAttacking = false
+          attackState.value.attackerIndex = null
+          attackState.value.attackerName = ''
+        }
+        
+        function openBattleLog() {
+          // Получаем ID главного окна через electron API
+          const mainWindowId = 1 // По умолчанию, electron-vite использует один main window
+          window.api.openBattleLog(mainWindowId)
+        }
+        
+        const nextAttackerIndex = computed(() => {
+          return fightersList.value.findIndex(f => f.isActive && !f.isDead)
+        })
 
         function checkRound() {
             if (fightersList.value.every((item) => !item.isActive)) {
@@ -210,6 +305,13 @@ export default {
             dealDamage,
             counter,
             roundCounter,
+            battleLog,
+            attackState,
+            startAttack,
+            selectTarget,
+            cancelAttack,
+            openBattleLog,
+            nextAttackerIndex,
           saveOptions,
           healDamage,
           removeFighter,

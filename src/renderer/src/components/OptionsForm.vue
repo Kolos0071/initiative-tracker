@@ -1,8 +1,7 @@
-
 <script setup lang="ts">
 import type { IOptionsFormState } from '../internal';
 import CommonForm from "./CommonForm.vue";
-import {defineProps} from "vue";
+
 defineProps<{
   optionFormState: IOptionsFormState
 }>()
@@ -60,7 +59,7 @@ defineProps<{
 .option-form__footer {
   position: sticky;
   bottom: 0;
-  background-color: #fff;
+  background-color: #dadada;
 }
 .option-form__input-title {
   margin-bottom: 12px;

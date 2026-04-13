@@ -4,8 +4,17 @@ import { electronAPI } from '@electron-toolkit/preload'
 // Custom APIs for renderer
 const api = {
   getData: (msg) => ipcRenderer.invoke('getData', msg),
-  setData: (msg) => ipcRenderer.invoke('setData', msg)
-
+  setData: (msg) => ipcRenderer.invoke('setData', msg),
+  
+  // Battle log APIs
+  openBattleLog: (mainWindowId: number) => ipcRenderer.invoke('openBattleLog', mainWindowId),
+  getBattleLog: () => ipcRenderer.invoke('getBattleLog'),
+  addBattleLogEntry: (entry: any) => ipcRenderer.invoke('addBattleLogEntry', entry),
+  clearBattleLog: () => ipcRenderer.invoke('clearBattleLog'),
+  closeBattleLogWindow: () => ipcRenderer.invoke('closeBattleLogWindow'),
+  onBattleLogUpdate: (callback: () => void) => {
+    ipcRenderer.on('battle-log-update', () => callback())
+  }
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

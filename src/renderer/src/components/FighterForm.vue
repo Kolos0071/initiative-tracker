@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import type { IFormState } from '../internal';
 import CommonForm from "./CommonForm.vue";
-import {defineProps} from "vue";
+
 defineProps<{
   formState: IFormState
 }>()
@@ -38,11 +38,13 @@ defineProps<{
 
 <style>
 
+
 .fighter-form__wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: space-around;
+  
 }
 
 .fighter-form__input-wrapper:not(:last-child) {
