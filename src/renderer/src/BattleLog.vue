@@ -81,8 +81,8 @@ onUnmounted(() => {
 
 body {
   font-family: Inter, system-ui, sans-serif;
-  background-color: #1a1a1a;
-  color: #fff;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 .battle-log-window {
@@ -90,6 +90,7 @@ body {
   flex-direction: column;
   height: 100vh;
   padding: 16px;
+  background-color: var(--color-background);
 }
 
 .battle-log__header {
@@ -97,13 +98,14 @@ body {
   justify-content: space-between;
   align-items: center;
   padding-bottom: 12px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: 12px;
 }
 
 .battle-log__header h2 {
   font-size: 20px;
   font-weight: 600;
+  color: var(--color-text);
 }
 
 .battle-log__actions {
@@ -114,16 +116,16 @@ body {
 .battle-log__actions button {
   padding: 6px 12px;
   font-size: 14px;
-  background-color: #2a2a2a;
-  color: #fff;
-  border: 1px solid #444;
+  background-color: var(--color-button-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   cursor: pointer;
 }
 
 .battle-log__actions button:hover {
-  background-color: #3a3a3a;
-  border-color: #646cff;
+  background-color: var(--color-button-hover);
+  border-color: var(--color-primary);
 }
 
 .battle-log__content {
@@ -139,7 +141,7 @@ body {
 
 .battle-log__entry {
   padding: 10px 12px;
-  background-color: #2a2a2a;
+  background-color: var(--color-log-entry-bg);
   border-radius: 6px;
   font-size: 14px;
   display: flex;
@@ -149,31 +151,31 @@ body {
 }
 
 .battle-log__entry--heal {
-  background-color: #1a3a1a;
+  background-color: var(--color-heal-bg);
 }
 
 .battle-log__round {
-  color: #888;
+  color: var(--color-log-text-secondary);
   font-size: 12px;
 }
 
 .battle-log__time {
-  color: #666;
+  color: var(--color-log-text-secondary);
   font-size: 12px;
 }
 
 .battle-log__attacker {
-  color: #ff9800;
+  color: var(--color-warning);
   font-weight: 500;
 }
 
 .battle-log__target {
-  color: #646cff;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
 .battle-log__arrow {
-  color: #888;
+  color: var(--color-log-text-secondary);
 }
 
 .battle-log__damage {
@@ -183,16 +185,16 @@ body {
 }
 
 .battle-log__damage--heal {
-  color: #4caf50;
+  color: var(--color-log-heal-text);
 }
 
 .battle-log__entry:not(.battle-log__entry--heal) .battle-log__damage {
-  color: #f44336;
+  color: var(--color-log-damage-text);
 }
 
 .battle-log__empty {
   text-align: center;
-  color: #666;
+  color: var(--color-text-secondary);
   padding: 40px;
   font-size: 16px;
 }
@@ -203,15 +205,15 @@ body {
 }
 
 .battle-log__content::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: var(--color-background);
 }
 
 .battle-log__content::-webkit-scrollbar-thumb {
-  background: #444;
+  background: var(--color-border);
   border-radius: 4px;
 }
 
 .battle-log__content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--color-text-secondary);
 }
 </style>

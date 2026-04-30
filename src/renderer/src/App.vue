@@ -2,6 +2,7 @@
 
     <OptionsForm :option-form-state="optionFormState" @save="saveOptions()"/>
     <FighterForm :form-state="formState" @add="addFighter()"/>
+    <ThemeToggle />
 
 <header class="header">
   <button class="option-button" @click="optionFormState.toggler">Options</button>

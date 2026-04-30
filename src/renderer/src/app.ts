@@ -1,5 +1,6 @@
 import FighterForm from './components/FighterForm.vue'
 import OptionsForm from './components/OptionsForm.vue'
+import ThemeToggle from './components/ThemeToggle.vue'
 import type { IFormState, ICharItem, IOptionsFormState, BattleLogEntry, AttackState } from './internal'
 import { ref, Ref, onMounted, computed } from 'vue'
 import {BTOptions} from "../../main/data-service";
@@ -7,7 +8,8 @@ import {BTOptions} from "../../main/data-service";
 export default {
     components: {
       OptionsForm: OptionsForm,
-      FighterForm: FighterForm
+      FighterForm: FighterForm,
+      ThemeToggle: ThemeToggle
     },
 
     setup() {
